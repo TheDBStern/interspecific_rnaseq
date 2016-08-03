@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 
 '''
-This script takes output from a pairwise (for now) cRBH run, extracts those orthologs from the respective 
+This script takes output from a pairwise (for now) RBBH run, extracts those orthologs from the respective 
 Trinity.fasta output file and renames transcripts in the second fasta file to the corresponding ones in the first
 
-usage: extract_rename_cRBH_orthologs.py <cRBH_output.txt> <first_fasta_input> <second_fasta_input> <first_fasta_output> <second_fasta_output>
+usage: extract_rename_cRBH_orthologs.py <RBBH_output.txt> <first_fasta_input> <second_fasta_input> <first_fasta_output> <second_fasta_output>
 
-Note: This assumes cRBH was run on the transdecoder.pep files, filtered to retain only the only ORF per transcript. The cRBH scripts of Salikos and Rochas 2011 
-require no special characters in the fasta file names (besides "_"). The original file names should be returned in the cRBH file before running (i.e. TR28398|c0_g1_i1)
 '''
 from Bio import SeqIO
 import sys
@@ -24,9 +22,9 @@ genes_second = []
 ortho_second = {}
 
 for line in orthos:
-    info = line.split(',')
+    info = line.split('\t')
     gene_first = info[0]
-    gene_second = info[1].strip('\n')
+    gene_second = info[1]
     genes_first.append(gene_first)
     genes_second.append(gene_second)
     ortho_second[gene_second] = gene_first
