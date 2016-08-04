@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 '''
 Should be place in the Trinity/util/misc folder
-usage: get_longest_protein_seq_per_trinity_transcript.pl Trinity.fasta.transdecoder.pep > output.fasfa
+usage: get_longest_protein_seq_per_trinity_transcript.pl Trinity.fasta.transdecoder.pep > output.fasta
 '''
 
 use strict;

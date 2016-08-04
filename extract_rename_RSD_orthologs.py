@@ -46,7 +46,7 @@ for record in SeqIO.parse(first_fasta, "fasta"):
 for record in SeqIO.parse(second_fasta, "fasta"):
     for x in genes_second:
         if x in record.id:
-            record.id = ortho_second[x] + '_i' + str(randint(1,20))
+            record.id = ortho_second[x] + '_i' + str(randint(1,99))
             print record.id
             SeqIO.write(record, outfile_second, "fasta")
 
