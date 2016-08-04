@@ -3,6 +3,7 @@
 '''
 This script takes output from a pairwise (for now) RBBH run, extracts those orthologs from the respective 
 Trinity.fasta output file and renames transcripts in the second fasta file to the corresponding ones in the first
+Should be able to extract all isoforms of each gene. Gives arbitrary isoform numbers to the second set of genes.
 
 usage: extract_rename_cRBH_orthologs.py <RBBH_output.txt> <first_fasta_input> <second_fasta_input> <first_fasta_output> <second_fasta_output>
 
@@ -26,20 +27,24 @@ ortho_second = {}
 for line in orthos:
     info = line.split('\t')
     gene_first = info[0]
+    gene_first = re.sub(r'_i\d+', '', gene_first)
     gene_second = info[1]
+    gene_second = re.sub(r'_i\d+', '', gene_second)
     genes_first.append(gene_first)
     genes_second.append(gene_second)
     ortho_second[gene_second] = gene_first
 
 
 for record in SeqIO.parse(first_fasta, "fasta"):
-    if record.id in genes_first:
+    gene = re.sub(r'_i\d+', '', record.id)
+    if gene in genes_first: 
         print ('Writing: ' + record.id)
         SeqIO.write(record, outfile_first, "fasta")
-   
+        
 for record in SeqIO.parse(second_fasta, "fasta"):
-    if record.id in genes_second:
-        record.id = ortho_second[record.id]
+    gene = re.sub(r'_i\d+', '', record.id)
+    if gene in genes_second:
+        record.id = ortho_second[gene]  + '_i' + str(randint(1,99))
         print ('Writing: ' + record.id)
         SeqIO.write(record, outfile_second, "fasta")
 
