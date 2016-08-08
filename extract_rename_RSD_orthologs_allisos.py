@@ -13,7 +13,7 @@ usage: extract_rename_RSD_orthologs.py <RSD_output.txt> <first_fasta_input> <sec
 from Bio import SeqIO
 import sys
 import re
-from random import randint
+
 
 
 outfile_first = open(sys.argv[4], "w")
@@ -38,17 +38,19 @@ for line in orthos:
 
 
 for record in SeqIO.parse(first_fasta, "fasta"):
-    for x in genes_first:
-        if x in record.id:
-            print record.id
-            SeqIO.write(record, outfile_first, "fasta")
-        
+    gene = re.sub(r'_i\d+', '', record.id)
+    if gene in genes_first: 
+        print ('Writing: ' + record.id)
+        SeqIO.write(record, outfile_first, "fasta")
+
+gene_list = []
 for record in SeqIO.parse(second_fasta, "fasta"):
-    for x in genes_second:
-        if x in record.id:
-            record.id = ortho_second[x] + '_i' + str(randint(1,99))
-            print record.id
-            SeqIO.write(record, outfile_second, "fasta")
+    gene = re.sub(r'_i\d+', '', record.id)
+    gene_list.append(gene)
+    if gene in genes_second:
+        record.id = ortho_second[gene]  + '_i' + str(gene_list.count(gene))
+        print ('Writing: ' + record.id)
+        SeqIO.write(record, outfile_second, "fasta")
 
 outfile_first.close()
 outfile_second.close()

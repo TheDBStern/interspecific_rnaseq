@@ -11,7 +11,7 @@ usage: extract_rename_cRBH_orthologs.py <RBBH_output.txt> <first_fasta_input> <s
 from Bio import SeqIO
 import sys
 import re
-from random import randint
+
 
 
 outfile_first = open(sys.argv[4], "w")
@@ -40,11 +40,13 @@ for record in SeqIO.parse(first_fasta, "fasta"):
     if gene in genes_first: 
         print ('Writing: ' + record.id)
         SeqIO.write(record, outfile_first, "fasta")
-        
+
+gene_list = []
 for record in SeqIO.parse(second_fasta, "fasta"):
     gene = re.sub(r'_i\d+', '', record.id)
+    gene_list.append(gene)
     if gene in genes_second:
-        record.id = ortho_second[gene]  + '_i' + str(randint(1,99))
+        record.id = ortho_second[gene]  + '_i' + str(gene_list.count(gene))
         print ('Writing: ' + record.id)
         SeqIO.write(record, outfile_second, "fasta")
 
