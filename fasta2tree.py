@@ -48,7 +48,7 @@ if __name__ == "__main__":
             cluster = fasta_file.split('.')[0]
             transx(fasta_file,DIR)
             os.system('rm '+DIR+'*.html '+DIR+'*nt1_ali.fasta '+DIR+'*nt2_ali.fasta '+DIR+'*nt3_ali.fasta '+DIR+'*nt12_ali.fasta '+DIR+'*.log '+DIR+'*.aaseqs '+DIR+'*.aaseqs.fasta '+DIR+'*aa_based_codon* '+DIR+'*.aa_ali.fasta')
-    for fasta_file in os.listdir(DIR:
+    for fasta_file in os.listdir(DIR):
         if fasta_file.endswith(ending):
             cluster = fasta_file.split('.')[0]
             partition(cluster+".transx.nt_ali.fasta",DIR)
