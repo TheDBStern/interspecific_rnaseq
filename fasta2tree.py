@@ -22,23 +22,31 @@ def partition(alignment,DIR):
     length = str(ali.get_alignment_length())
     output = open(DIR+"partition.PART", "w")
     output.write("DNA, p1 = 1-"+length+"\\3\nDNA, p2 = 2-"+length+"\\3\nDNA, p3 = 3-"+length+"\\3\n")
-    
-def raxml(alignment,DIR):
-    cluster = alignment.split('.')[0]
-    command = raxml_cmd+" -f d -m GTRGAMMA -p 1293049 -# 1 -q "+DIR+"partition.PART -s "+DIR+alignment+" -w "+os.path.abspath(DIR)+" -n "+cluster
-    print "executing: " + command
-    os.system(command)
-    tree = DIR+cluster+".raxml.tre"
-    raw_tree = DIR+"RAxML_bestTree."+cluster
-    try:
-        os.rename(raw_tree,tree)
-        os.remove(DIR+"RAxML_info."+cluster)
-        os.remove(DIR+"RAxML_log."+cluster)
-        os.remove(DIR+"RAxML_parsimonyTree."+cluster)
-        os.remove(DIR+"RAxML_result."+cluster)
-        os.remove(DIR+cluster+".reduced")
-    except:pass 
 
+def seqcount(alignment):
+    count = 0
+    for fasta in alignment:
+        count += 1
+    return count
+    
+def tree(alignment,DIR):
+    ali = AlignIO.read(DIR+alignment, "fasta")
+    if seqcount(ali) < 500:
+        cluster = alignment.split('.')[0]
+        command = raxml_cmd+" -f d -m GTRCAT -p 1293049 -# 3 -q "+DIR+"partition.PART -s "+DIR+alignment+" -w "+os.path.abspath(DIR)+" -n "+cluster
+        print "executing: " + command
+        os.system(command)
+        tree = DIR+cluster+".raxml.tre"
+        raw_tree = DIR+"RAxML_bestTree."+cluster
+        try:
+            os.rename(raw_tree,tree)
+            os.remove(DIR+"RAxML_*")
+            os.remove(DIR+cluster+".reduced*")
+        except:pass 
+    else:
+        cluster = alignment.split('.')[0]
+        command = 'FastTree -gtr -nt '+DIR+alignment+' > '+DIR+cluster+'.fasttree.tre'
+        os.system(command)
 
 if __name__ == "__main__":
     DIR, ending = sys.argv[1:]
@@ -52,5 +60,5 @@ if __name__ == "__main__":
         if fasta_file.endswith(ending):
             cluster = fasta_file.split('.')[0]
             partition(cluster+".transx.nt_ali.fasta",DIR)
-            raxml(cluster+".transx.nt_ali.fasta",DIR)
+            tree(cluster+".transx.nt_ali.fasta",DIR)
             
