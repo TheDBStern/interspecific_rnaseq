@@ -23,6 +23,12 @@ def gene_trans(fasta, output):
             gene = m.group(1)
             trans = m.group(1)+m.group(2)
             outfile.write(gene+'\t'+trans+'\n')
+        elif re.search(r"cluster.+", record.id):
+            m = re.search(r"cluster.+", record.id)
+            trans = m.group()
+            gene = '_'.join(trans.split('_')[:-1])
+            outfile.write(gene+'\t'+trans+'\n')
+ 
 
 
 if __name__ == "__main__":
