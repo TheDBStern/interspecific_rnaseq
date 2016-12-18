@@ -11,7 +11,6 @@ import re
 import os
 
 infile, reference = sys.argv[1:]
-if DIR[-1] != "/": DIR += "/"
 print 'Indexing reference...'
 ref_index = SeqIO.index(reference, "fasta")
 print 'Extracting sequences'
