@@ -20,7 +20,7 @@ for line in blastout:
     counter = 0
     name = line.split('\t')[0]
     sequence = line.split('\t')[1]
-    species = sequence('@')[0]
+    species = sequence.split('@')[0]
     output = open(species+'.blasthits.fasta', 'a')
     gene = '_'.join(sequence.split('_')[:-1])
     trans = []
