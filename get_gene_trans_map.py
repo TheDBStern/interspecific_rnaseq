@@ -14,8 +14,12 @@ def gene_trans(fasta, output):
     outfile = open(output, "w")
     for record in SeqIO.parse(handle, "fasta"):
         transcript = record.id
-        gene = '_'.join(transcript.split('_')[:-1])
-        outfile.write(gene+'\t'+transcript+'\n')
+        if len(transcript.split('_')) > 1:
+            gene = '_'.join(transcript.split('_')[:-1])
+            outfile.write(gene+'\t'+transcript+'\n')
+        else:
+            gene = transcript
+            outfile.write(gene+'\t'+transcript+'\n')
 
 if __name__ == "__main__":
     input = sys.argv[1]
