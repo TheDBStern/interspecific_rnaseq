@@ -9,20 +9,19 @@ import sys
 import re
 import os
 
-DIR, reference, input = sys.argv[1:]
-if DIR[-1] != "/": DIR += "/"
+reference, input = sys.argv[1:]
 print 'Indexing reference...'
 ref_index = SeqIO.index(reference, "fasta")
 print 'Extracting sequences'
 
 with open(input) as f:
     for line in f:
-    	clust = line.split(',')[1].strip('#')
+    	clust = line.split(',')[0].strip('#')
         counter = 0
         print clust
         tips = []
-        for leaf in line.split(',')[1:].strip('\n'):
-            tips.append(leaf)
+        for leaf in line.split(',')[1:]:
+            tips.append(leaf.strip('\n'))
         for tip in tips:
             species = tip.split('@')[0]
             output = open(species+'.homologs.fasta', 'a')
