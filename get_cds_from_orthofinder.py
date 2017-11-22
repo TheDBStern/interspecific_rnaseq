@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 '''
-This script creates a fasta file for each species in the analysis. It loops through each orthogroup
-fetching the Trinity sequences from the concatenated Trinity.fasta file, renaming to the orthogroup name
+usage: python get_cds_from_pep_clusters.py 
+This script needs to be run from the output directory
 '''
 from Bio import SeqIO
 import sys
@@ -25,22 +25,12 @@ with open(input) as f:
 				species.append(sp)
 		print species
 		if len(species) == int(MinTax):
+			output = open(clust+'.fasta', 'w')
 			print clust
 			tips = []
 			for leaf in line.split(' ')[1:]:
 				tips.append(leaf.strip('\n'))
 			for tip in tips:
-				species = tip.split('@')[0]
-				output = open(species+'.homologs.fasta', 'a')
-				record = ref_index[tip]
-				record.id = clust+'_'+str(counter)
-				record.description = clust+'_'+str(counter)
-				SeqIO.write(record, output, "fasta")
-				counter += 1
+				output.write(ref_index.get_raw(tip))
 		else:
 			pass
-		
-'''
-transcript = 'CACUM@TRINITY_DN_c0_g1_i1'
-gene = '_'.join(transcript.split('_')[:-1])
-'''

@@ -8,7 +8,7 @@ requires biopython
 import sys, os
 from Bio import SeqIO
 
-input = sys.argv[1]
+input, binsize = sys.argv[1:]
 if not os.path.isdir('./Targets'):
     os.mkdir('./Targets')
 cwd = os.getcwd()

@@ -8,8 +8,8 @@ import glob, os
 import sys
 from Bio import AlignIO
 
-translatorx_path = '/home/dbstern/Programs/translatorx_vLocal.pl'
-raxml_cmd = 'raxmlHPC-PTHREADS-AVX -T 16'
+translatorx_path = '/Users/dbstern/Desktop/Phylogenetics_Programs/translatorx_vLocal.pl'
+raxml_cmd = 'raxmlHPC-PTHREADS-AVX -T 4'
 
 def transx(fasta_file,DIR):
     transout = fasta_file.split('.')[0]+".transx"
@@ -31,7 +31,7 @@ def seqcount(alignment):
     
 def tree(alignment,DIR):
     ali = AlignIO.read(DIR+alignment, "fasta")
-    if seqcount(ali) < 500:
+    if seqcount(ali) < 100:
         cluster = alignment.split('.')[0]
         command = raxml_cmd+" -f d -m GTRCAT -p 1293049 -# 3 -q "+DIR+"partition.PART -s "+DIR+alignment+" -w "+os.path.abspath(DIR)+" -n "+cluster
         print "executing: " + command
