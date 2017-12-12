@@ -8,8 +8,8 @@ import glob, os
 import sys
 from Bio import AlignIO
 
-translatorx_path = '/Users/dbstern/Desktop/Phylogenetics_Programs/translatorx_vLocal.pl'
-raxml_cmd = 'raxmlHPC-PTHREADS-AVX -T 4'
+translatorx_path = '/home/dbstern/Programs/translatorx_vLocal.pl'
+raxml_cmd = 'raxmlHPC-PTHREADS-AVX -T 16'
 
 def transx(fasta_file,DIR):
 	transout = fasta_file.split('.')[0]+".transx"
@@ -55,7 +55,7 @@ if __name__ == "__main__":
 		if fasta_file.endswith(ending):
 			cluster = fasta_file.split('.')[0]
 			if os.path.isfile(DIR+cluster+'.transx.nt_ali.fasta'):
-				pass
+				print('Detected alignment for '+cluster)
 			else:
 				transx(fasta_file,DIR)
 				os.system('rm '+DIR+'*.html '+DIR+'*nt1_ali.fasta '+DIR+'*nt2_ali.fasta '+DIR+'*nt3_ali.fasta '+DIR+'*nt12_ali.fasta '+DIR+'*.log '+DIR+'*.aaseqs '+DIR+'*.aaseqs.fasta '+DIR+'*aa_based_codon* '+DIR+'*.aa_ali.fasta')
@@ -63,7 +63,7 @@ if __name__ == "__main__":
 		if fasta_file.endswith(ending):
 			cluster = fasta_file.split('.')[0]
 			if os.path.isfile(DIR+cluster+'.raxml.tre') or os.path.isfile(DIR+cluster+'.fasttree.tre'): 
-				pass
+				print('Detected tree file for '+cluster)
 			else:
 				partition(cluster+".transx.nt_ali.fasta",DIR)
 				tree(cluster+".transx.nt_ali.fasta",DIR)

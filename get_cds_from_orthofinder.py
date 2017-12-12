@@ -24,7 +24,7 @@ with open(input) as f:
 			if sp not in species:
 				species.append(sp)
 		print species
-		if len(species) == int(MinTax):
+		if len(species) >= int(MinTax):
 			output = open(clust+'.fasta', 'w')
 			print clust
 			tips = []
