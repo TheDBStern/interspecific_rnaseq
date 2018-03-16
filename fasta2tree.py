@@ -33,7 +33,7 @@ def tree(alignment,DIR):
 	ali = AlignIO.read(DIR+alignment, "fasta")
 	if seqcount(ali) < 500:
 		cluster = alignment.split('.')[0]
-		command = raxml_cmd+" -f d -m GTRCAT -p 1293049 -# 3 -q "+DIR+"partition.PART -s "+DIR+alignment+" -w "+os.path.abspath(DIR)+" -n "+cluster
+		command = raxml_cmd+" -f d -m GTRCAT -p 1293049 -# 10 -q "+DIR+"partition.PART -s "+DIR+alignment+" -w "+os.path.abspath(DIR)+" -n "+cluster
 		print "executing: " + command
 		os.system(command)
 		tree = DIR+cluster+".raxml.tre"

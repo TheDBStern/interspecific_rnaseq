@@ -11,14 +11,9 @@ parser.add_argument('-E', dest = 'ending', type = str, required=True,  help = 'F
 parser.add_argument('--iqtree', dest= 'iqtree', action ='store_true', default= False, help ='use iqtree to estimate phylogeny with modeltesting (TESTNEW), default = False.')
 args = parser.parse_args()
 
-<<<<<<< HEAD
 translatorx_path = '/Users/dbstern/Desktop/Phylogenetics_Programs/translatorx_vLocal.pl'
 raxml_cmd = 'raxmlHPC-PTHREADS-AVX -T 4'
 iqtree_cmd = 'iqtree'
-=======
-translatorx_path = '/home/dbstern/Programs/translatorx_vLocal.pl'
-raxml_cmd = 'raxmlHPC-PTHREADS-AVX -T 16'
->>>>>>> 6b3501c7cdc319ab6692ee9fd42dd95c8cebd5a6
 
 def transx(fasta_file,DIR):
 	transout = fasta_file.split('.')[0]+".transx"
@@ -43,7 +38,7 @@ def tree(alignment,DIR):
 	if seqcount(ali) < 500:
 		cluster = alignment.split('.')[0]
 		if args.iqtree:
-			command = iqtree_cmd+' -s '+DIR+alignment+' -spp '+DIR+'partition.PART -m TESTNEWMERGE -nt AUTO -pre '+DIR+cluster
+			command = iqtree_cmd+' -s '+DIR+alignment+' -spp '+DIR+'partition.PART -m TESTNEWMERGE -nt 2 -pre '+DIR+cluster
 			os.system(command)
 			tree = DIR+cluster+".iqtree.tre"
 			raw_tree = DIR+cluster+'.treefile'
@@ -52,7 +47,7 @@ def tree(alignment,DIR):
 				os.system('rm '+DIR+cluster+'.best_scheme '+DIR+cluster+".best_scheme.nex "+DIR+cluster+".bionj "+DIR+cluster+".ckp.gz "+DIR+cluster+".iqtree "+DIR+cluster+".log "+DIR+cluster+".mldist "+DIR+cluster+".model.gz")
 			except:pass 
 		else:
-			command = raxml_cmd+" -f d -m GTRCAT -p 1293049 -# 3 -q "+DIR+"partition.PART -s "+DIR+alignment+" -w "+os.path.abspath(DIR)+" -n "+cluster
+			command = raxml_cmd+" -f d -m GTRCAT -p 1293049 -# 10 -q "+DIR+"partition.PART -s "+DIR+alignment+" -w "+os.path.abspath(DIR)+" -n "+cluster
 			print "executing: " + command
 			os.system(command)
 			tree = DIR+cluster+".raxml.tre"
@@ -82,13 +77,8 @@ if __name__ == "__main__":
 	for fasta_file in os.listdir(DIR):
 		if fasta_file.endswith(ending):
 			cluster = fasta_file.split('.')[0]
-<<<<<<< HEAD
 			if os.path.isfile(DIR+cluster+'.raxml.tre') or os.path.isfile(DIR+cluster+'.fasttree.tre') or os.path.isfile(DIR+cluster+'.iqtree.tre'): 
-				pass
-=======
-			if os.path.isfile(DIR+cluster+'.raxml.tre') or os.path.isfile(DIR+cluster+'.fasttree.tre'): 
 				print('Detected tree file for '+cluster)
->>>>>>> 6b3501c7cdc319ab6692ee9fd42dd95c8cebd5a6
 			else:
 				partition(cluster+".transx.nt_ali.fasta",DIR)
 				tree(cluster+".transx.nt_ali.fasta",DIR)
