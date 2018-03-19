@@ -9,6 +9,7 @@ parser = argparse.ArgumentParser(description='Script to create data matrices for
 parser.add_argument('-s', dest = 'SpFile', type = str, required=True,  help = 'Path to comma-delimited file with the names of all the species in the analysis separated by the state of interest (0 or 1)')
 parser.add_argument('-i', dest= 'In', type = str, required=True, help ='Expression matrix')
 parser.add_argument('--log2', dest= 'lg2', action ='store_true', default= False, help ='log2 transform expression values, default = False.')
+parser.add_argument('--sqrt', dest= 'sqr', action ='store_true', default= False, help ='sqrt transform expression values, default = False.')
 args = parser.parse_args()
 
 sp_list = []
@@ -31,6 +32,8 @@ for index in exp_mat.iterrows():
 	print index[0]
 	if args.lg2:
 		outfile = open('ouwie_dat/'+str(index[0])+'.dat.log2.csv','w')
+	if args.sqr:
+		outfile = open('ouwie_dat/'+str(index[0])+'.dat.sqrt.csv','w')
 	else:
 		outfile = open('ouwie_dat/'+str(index[0])+'.dat.csv','w')
 	outfile.write('Species,State,ExpMean,ExpSE\n')
@@ -39,6 +42,10 @@ for index in exp_mat.iterrows():
 			mymean = numpy.mean(numpy.log2(exp_mat.loc[index[0],lib_dict[sp]]+1))
 			myse = numpy.std(numpy.log2(exp_mat.loc[index[0],lib_dict[sp]]+1)) / numpy.sqrt(len(exp_mat.loc[index[0],lib_dict[sp]]))
 			outfile.write(','.join([sp,state_dict[sp],str(mymean),str(myse+0.000000001)+'\n']))
+		if args.sqr:
+			mymean = numpy.mean(numpy.sqrt(exp_mat.loc[index[0],lib_dict[sp]]))
+			myse = numpy.std(numpy.sqrt(exp_mat.loc[index[0],lib_dict[sp]])) / numpy.sqrt(len(exp_mat.loc[index[0],lib_dict[sp]]))
+			outfile.write(','.join([sp,state_dict[sp],str(mymean),str(myse+0.000000001)+'\n']))		
 		else:
 			mymean = numpy.mean(exp_mat.loc[index[0],lib_dict[sp]])
 			myse = numpy.std(exp_mat.loc[index[0],lib_dict[sp]])/numpy.sqrt(len(exp_mat.loc[index[0],lib_dict[sp]]))
