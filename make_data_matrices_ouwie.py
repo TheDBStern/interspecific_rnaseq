@@ -5,12 +5,15 @@ import argparse
 import pandas as pd
 import numpy
 
-parser = argparse.ArgumentParser(description='Script to create data matrices for input to OUwie')
+parser = argparse.ArgumentParser(description='Script to create expression data matrices for input to OUwie')
 parser.add_argument('-s', dest = 'SpFile', type = str, required=True,  help = 'Path to comma-delimited file with the names of all the species in the analysis separated by the state of interest (0 or 1)')
 parser.add_argument('-i', dest= 'In', type = str, required=True, help ='Expression matrix')
 parser.add_argument('--log2', dest= 'lg2', action ='store_true', default= False, help ='log2 transform expression values, default = False.')
 parser.add_argument('--sqrt', dest= 'sqr', action ='store_true', default= False, help ='sqrt transform expression values, default = False.')
 args = parser.parse_args()
+
+if not os.path.isdir("./ouwie_dat"):
+	os.mkdir("./ouwie_dat")
 
 sp_list = []
 lib_dict = {}
