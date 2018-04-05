@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-usage: python get_cds_from_pep_clusters.py 
+usage: python get_cds_from_orthofinder.py 
 This script needs to be run from the output directory
 '''
 from Bio import SeqIO

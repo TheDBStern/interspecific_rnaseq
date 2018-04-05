@@ -27,6 +27,6 @@ if __name__ == "__main__":
     gene_trans(input, output)
 
 '''
-transcript = 'CACUM@TRINITY_DN_c0_g1_i1'
+transcript = 'SPECIES@TRINITY_DN_c0_g1_i1'
 gene = '_'.join(transcript.split('_')[:-1])
 '''
