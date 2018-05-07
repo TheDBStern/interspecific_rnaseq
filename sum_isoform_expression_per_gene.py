@@ -2,7 +2,7 @@
 ''' 
 This script takes the isoforms.results output of RSEM and creates a gene-level results file with each 'gene' level abundance
 taken as the sum across member 'transcripts'
-usage: python average_isoform_expression_per_gene.py [input.isoforms.results]
+usage: python average_isoform_expression_per_gene.py <input.isoforms.results>
 '''
 from __future__ import division
 import os

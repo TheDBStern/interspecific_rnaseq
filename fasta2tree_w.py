@@ -5,7 +5,7 @@ import sys
 from Bio import AlignIO
 import argparse
 
-parser = argparse.ArgumentParser(description='This script takes a directory of fasta files, aligns them using translatorX, and estimates a tree using raxml, partitioned by codon. Alternatively, can specify to use iqtree with modeltesting. Need to adjust translatorx script path and raxml command. Needs mafft in the PATH')
+parser = argparse.ArgumentParser(description='This script takes a directory of fasta files, aligns them using translatorX, and estimates a tree using raxml, partitioned by codon position. Alternatively, can specify to use iqtree with modeltesting. Need to adjust translatorx script path and raxml command. Needs mafft in the PATH')
 parser.add_argument('-D', dest = 'DIR', type = str, required=True,  help = 'Path to input directory of fasta files')
 parser.add_argument('-E', dest = 'ending', type = str, required=True,  help = 'Fasta files ending')
 parser.add_argument('--iqtree', dest= 'iqtree', action ='store_true', default= False, help ='use iqtree to estimate phylogeny with modeltesting (TESTNEW), default = False.')

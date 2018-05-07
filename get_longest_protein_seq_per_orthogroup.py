@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 '''
+Takes a directory of orthogroup fasta files and a reference fasta file containing all amino acid sequences and creates
+a single fasta file with the longest amino-acid sequence per orthogroup
 '''
 from Bio import SeqIO
 import sys
