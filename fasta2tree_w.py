@@ -12,18 +12,18 @@ parser.add_argument('--iqtree', dest= 'iqtree', action ='store_true', default= F
 parser.add_argument('--aa', dest= 'aa', action ='store_true', default= False, help ='input data are amino acid sequences, automatically uses mafft for alignment and iqtree to infer phylogeny, default = False.')
 args = parser.parse_args()
 
-translatorx_path = '/Users/dbstern/Desktop/Phylogenetics_Programs/translatorx_vLocal.pl'
+translatorx_path = '~/software/translatorx_vLocal.pl'
 raxml_cmd = 'raxmlHPC-PTHREADS-AVX -T 4'
-iqtree_cmd = 'iqtree'
+iqtree_cmd = 'iqtree -nt 8'
 mafft_cmd = 'mafft'
 
 
 def transx(fasta_file,DIR):
 	transout = fasta_file.split('.')[0]+".transx"
 	command = "perl "+translatorx_path+" -i "+DIR+fasta_file+" -o "+DIR+transout+" -p F -c 1 -t T"
-	print "executing: " + command
+	print("executing: " + command)
 	os.system(command)
-	
+
 def partition(alignment,DIR):
 	ali = AlignIO.read(DIR+alignment, "fasta")
 	length = str(ali.get_alignment_length())
@@ -35,23 +35,23 @@ def seqcount(alignment):
 	for fasta in alignment:
 		count += 1
 	return count
-	
+
 def tree(alignment,DIR):
 	ali = AlignIO.read(DIR+alignment, "fasta")
 	if seqcount(ali) < 500:
 		cluster = alignment.split('.')[0]
 		if args.iqtree:
-			command = iqtree_cmd+' -s '+DIR+alignment+' -spp '+DIR+'partition.PART -m TESTNEWMERGE -nt 2 -pre '+DIR+cluster
+			command = iqtree_cmd+' -s '+DIR+alignment+' -spp '+DIR+'partition.PART -m MFP+MERGE -pre '+DIR+cluster
 			os.system(command)
 			tree = DIR+cluster+".iqtree.tre"
 			raw_tree = DIR+cluster+'.treefile'
 			try:
 				os.rename(raw_tree,tree)
 				os.system('rm '+DIR+cluster+'.best_scheme '+DIR+cluster+".best_scheme.nex "+DIR+cluster+".bionj "+DIR+cluster+".ckp.gz "+DIR+cluster+".iqtree "+DIR+cluster+".log "+DIR+cluster+".mldist "+DIR+cluster+".model.gz")
-			except:pass 
+			except:pass
 		else:
 			command = raxml_cmd+" -f d -m GTRCAT -p 1293049 -# 10 -q "+DIR+"partition.PART -s "+DIR+alignment+" -w "+os.path.abspath(DIR)+" -n "+cluster
-			print "executing: " + command
+			print("executing: " + command)
 			os.system(command)
 			tree = DIR+cluster+".raxml.tre"
 			raw_tree = DIR+"RAxML_bestTree."+cluster
@@ -59,7 +59,7 @@ def tree(alignment,DIR):
 				os.rename(raw_tree,tree)
 				os.system('rm '+DIR+"RAxML_*")
 				os.system('rm '+DIR+cluster+".reduced*")
-			except:pass 
+			except:pass
 	else:
 		cluster = alignment.split('.')[0]
 		command = 'FastTree -gtr -nt '+DIR+alignment+' > '+DIR+cluster+'.fasttree.tre'
@@ -76,7 +76,7 @@ def tree_aa(alignment,DIR):
 		try:
 			os.rename(raw_tree,tree)
 			os.system('rm '+DIR+cluster+'.best_scheme '+DIR+cluster+".best_scheme.nex "+DIR+cluster+".bionj "+DIR+cluster+".ckp.gz "+DIR+cluster+".iqtree "+DIR+cluster+".log "+DIR+cluster+".mldist "+DIR+cluster+".model.gz")
-		except:pass 
+		except:pass
 	else:
 		cluster = alignment.split('.')[0]
 		command = 'FastTree '+DIR+alignment+' > '+DIR+cluster+'.fasttree.tre'
@@ -85,7 +85,7 @@ def tree_aa(alignment,DIR):
 def mafft_aa(fasta_file,DIR):
 	mafftout = fasta_file.split('.')[0]+".mafft"
 	command = mafft_command+" --auto "+DIR+fasta_file+" > "+DIR+mafftout
-	print "executing: " + command
+	print("executing: " + command)
 	os.system(command)
 
 
@@ -113,15 +113,15 @@ if __name__ == "__main__":
 		if args.aa:
 			if fasta_file.endswith(ending):
 				cluster = fasta_file.split('.')[0]
-				if os.path.isfile(DIR+cluster+'.raxml.tre') or os.path.isfile(DIR+cluster+'.fasttree.tre') or os.path.isfile(DIR+cluster+'.iqtree.tre'): 
+				if os.path.isfile(DIR+cluster+'.raxml.tre') or os.path.isfile(DIR+cluster+'.fasttree.tre') or os.path.isfile(DIR+cluster+'.iqtree.tre'):
 					print('Detected tree file for '+cluster)
 				else:
-				tree_aa(cluster+"mafft",DIR)
+					tree_aa(cluster+"mafft",DIR)
 		else:
 			if fasta_file.endswith(ending):
 				cluster = fasta_file.split('.')[0]
-				if os.path.isfile(DIR+cluster+'.raxml.tre') or os.path.isfile(DIR+cluster+'.fasttree.tre') or os.path.isfile(DIR+cluster+'.iqtree.tre'): 
+				if os.path.isfile(DIR+cluster+'.raxml.tre') or os.path.isfile(DIR+cluster+'.fasttree.tre') or os.path.isfile(DIR+cluster+'.iqtree.tre'):
 					print('Detected tree file for '+cluster)
 				else:
-				partition(cluster+".transx.nt_ali.fasta",DIR)
-				tree(cluster+".transx.nt_ali.fasta",DIR)
+					partition(cluster+".transx.nt_ali.fasta",DIR)
+					tree(cluster+".transx.nt_ali.fasta",DIR)
